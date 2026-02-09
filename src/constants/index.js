@@ -53,7 +53,7 @@ const dockApps = [
 	{
 		// "Photos"
 		id: "photos",
-		name: "Gallery",
+		name: "Work",
 		icon: "photos.png",
 		canOpen: true,
 	},
