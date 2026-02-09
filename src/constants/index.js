@@ -433,10 +433,10 @@ const ABOUT_LOCATION = {
 			subtitle: "Meet the Developer Behind the Code",
 			image: "/images/adrian.jpg",
 			description: [
-				"Hey! I’m Adrian 👋, a web developer who enjoys building sleek, interactive websites that actually work well.",
-				"I specialize in JavaScript, React, and Next.js—and I love making things feel smooth, fast, and just a little bit delightful.",
-				"I’m big on clean UI, good UX, and writing code that doesn’t need a search party to debug.",
-				"Outside of dev work, you'll find me tweaking layouts at 2AM, sipping overpriced coffee, or impulse-buying gadgets I absolutely convinced myself I needed 😅",
+				"Hey! I’m Hamza 👋, a software developer who enjoys building sleek, interactive websites that actually work well.",
+				"I specialize in JavaScript, React, and Next.js and I love making things feel smooth, fast and just a little bit delightful.",
+				"I enjoy creating clean UI, good UX and writing code that doesn’t need a search party to debug.",
+				"Outside of dev work, you'll find me tweaking layouts at wierd timings, learning new things or building another software. 😅",
 			],
 		},
 	],
@@ -455,8 +455,6 @@ const RESUME_LOCATION = {
 			icon: "/images/pdf.png",
 			kind: "file",
 			fileType: "pdf",
-			// you can add `href` if you want to open a hosted resume
-			// href: "/your/resume/path.pdf",
 		},
 	],
 };
@@ -498,6 +496,7 @@ export const locations = {
 
 const INITIAL_Z_INDEX = 1000;
 
+// Start off as closed
 const WINDOW_CONFIG = {
 	finder: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
 	contact: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
