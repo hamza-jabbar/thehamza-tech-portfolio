@@ -38,9 +38,11 @@ const setupTextHover = (container, type) => {
     }
 
     const handleMouseMove = (e) => {
+        // Get starting position of the characters
         const { left } = container.getBoundingClientRect();
         const mouseX = e.clientX - left;
 
+        // When mouse moves over the letters, the font weight increases
         letters.forEach((letter) => {
             const { left: l, width: w } = letter.getBoundingClientRect();      //  Get position of the letter
             const distance = Math.abs(mouseX - (l - left + w / 2));            //  The hover effect occurs when the mouse is on the letter
