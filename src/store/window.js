@@ -1,3 +1,5 @@
+// Which window is open
+
 import { INITIAL_Z_INDEX, WINDOW_CONFIG } from "#constants/index.js";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
