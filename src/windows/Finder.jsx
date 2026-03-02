@@ -16,7 +16,7 @@ const Finder = () => {
     if (['fig', 'url'].includes(item.fileType) && item.href)
       return window.open(item.href, "_blank")
 
-    openWindow(`${item.fileType}${item.kind}`, item) // TODO
+    openWindow(`${item.fileType}${item.kind}`, item)
   };
 
   const renderList = (name, items) => (
