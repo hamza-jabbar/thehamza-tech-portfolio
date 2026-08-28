@@ -1,13 +1,14 @@
-import { useRef } from "react"
+import { useRef } from "react";
 import { Tooltip } from "react-tooltip";
 import gsap from "gsap";
+import clsx from "clsx";
 
 import { dockApps } from "#constants";
 import { useGSAP } from "@gsap/react";
-import useWindowStore from "#store/window.js";
+import useWindowStore from "#store/window";
 
 const Dock = () => {
-	const dockRef = useRef(null);
+	const dockRef = useRef<HTMLDivElement>(null);
 	const { openWindow, closeWindow, windows } = useWindowStore();
 
 	// Animate using GSAP
@@ -18,7 +19,7 @@ const Dock = () => {
 		const icons = dock.querySelectorAll(".dock-icon");
 
 		// Animate icons
-		const animateIcons = (mouseX) => {
+		const animateIcons = (mouseX: number) => {
 			const { left } = dock.getBoundingClientRect();
 
 			icons.forEach((icon) => {
@@ -33,12 +34,12 @@ const Dock = () => {
 					scale: 1 + 0.25 * intensity,
 					y: -15 * intensity,
 					duration: 0.2,
-					ease: "power1.out"
+					ease: "power1.out",
 				});
 			});
 		};
 
-		const handleMouseMove = (e) => {
+		const handleMouseMove = (e: MouseEvent) => {
 			// Get starting position of the dock
 			const { left } = dock.getBoundingClientRect();
 
@@ -51,22 +52,21 @@ const Dock = () => {
 					scale: 1,
 					y: 0,
 					duration: 0.3,
-					ease: "power1.out"
-				}),
-			)
-		dock.addEventListener('mousemove', handleMouseMove);
-		dock.addEventListener('mouseleave', resetIcons);
+					ease: "power1.out",
+				})
+			);
+		dock.addEventListener("mousemove", handleMouseMove);
+		dock.addEventListener("mouseleave", resetIcons);
 
 		// Cleanup function
 		return () => {
-			dock.removeEventListener('mousemove', handleMouseMove);
-			dock.removeEventListener('mouseleave', resetIcons);
-		}
+			dock.removeEventListener("mousemove", handleMouseMove);
+			dock.removeEventListener("mouseleave", resetIcons);
+		};
 	}, []);
 
-
 	// Function to open the app
-	const toggleApp = (app) => {
+	const toggleApp = (app: { id: string; canOpen: boolean }) => {
 		if (!app.canOpen) return;
 
 		const window = windows[app.id];
@@ -81,39 +81,36 @@ const Dock = () => {
 		} else {
 			openWindow(app.id);
 		}
-
-		// console.log(windows) 1:26:58
-
-	}
+	};
 
 	return (
-		<section id="dock" >
-			<div ref={dockRef} className="dock-container">
+		<section id="dock" className="absolute bottom-5 left-1/2 -translate-x-1/2 z-50 select-none max-sm:hidden">
+			<div ref={dockRef} className="bg-white/20 backdrop-blur-md justify-between rounded-2xl p-1.5 flex items-end gap-1.5">
 				{dockApps.map(({ id, name, icon, canOpen }) => (
 					<div key={id} className="relative flex justify-center">
 						<button
 							type="button"
-							className="dock-icon"
+							className="dock-icon size-14 3xl:size-20 cursor-pointer"
 							aria-label={name}
 							data-tooltip-id="dock-tooltip"
 							data-tooltip-content={name}
 							data-tooltip-delay-show={150}
 							disabled={!canOpen}
-							onClick={() => toggleApp({ id, canOpen })}										// open the app
+							onClick={() => toggleApp({ id, canOpen })}
 						>
 							<img
 								src={`/images/${icon}`}
 								alt={name}
 								loading="lazy"
-								className={canOpen ? "" : "opacity-60"}
+								className={clsx("object-cover object-center", !canOpen && "opacity-60")}
 							/>
 						</button>
 					</div>
 				))}
-				<Tooltip id="dock-tooltip" place="top" className="tooltip" />
+				<Tooltip id="dock-tooltip" place="top" className="py-1! px-3! w-fit! text-center! text-xs! rounded-md! bg-blue-200! text-blue-900! shadow-2xl!" />
 			</div>
 		</section>
-	)
-}
+	);
+};
 
-export default Dock
+export default Dock;

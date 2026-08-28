@@ -1,4 +1,10 @@
-const navLinks = [
+export interface NavLink {
+	id: number;
+	name: string;
+	type: string;
+}
+
+const navLinks: NavLink[] = [
 	{
 		id: 1,
 		name: "Projects",
@@ -16,7 +22,12 @@ const navLinks = [
 	},
 ];
 
-const navIcons = [
+export interface NavIcon {
+	id: number;
+	img: string;
+}
+
+const navIcons: NavIcon[] = [
 	{
 		id: 1,
 		img: "/icons/wifi.svg",
@@ -35,7 +46,14 @@ const navIcons = [
 	},
 ];
 
-const dockApps = [
+export interface DockApp {
+	id: string;
+	name: string;
+	icon: string;
+	canOpen: boolean;
+}
+
+const dockApps: DockApp[] = [
 	{
 		// "Finder"
 		id: "finder",
@@ -80,7 +98,15 @@ const dockApps = [
 	},
 ];
 
-const blogPosts = [
+export interface BlogPost {
+	id: number;
+	date: string;
+	title: string;
+	image: string;
+	link: string;
+}
+
+const blogPosts: BlogPost[] = [
 	{
 		id: 1,
 		date: "Sep 2, 2025",
@@ -105,7 +131,12 @@ const blogPosts = [
 	},
 ];
 
-const techStack = [
+export interface TechStackItem {
+	category: string;
+	items: string[];
+}
+
+const techStack: TechStackItem[] = [
 	{
 		category: "Frontend",
 		items: ["React.js", "Next.js", "TypeScript"],
@@ -132,7 +163,15 @@ const techStack = [
 	},
 ];
 
-const socials = [
+export interface SocialLink {
+	id: number;
+	text: string;
+	icon: string;
+	bg: string;
+	link: string;
+}
+
+const socials: SocialLink[] = [
 	{
 		id: 1,
 		text: "Github",
@@ -163,7 +202,13 @@ const socials = [
 	},
 ];
 
-const photosLinks = [
+export interface PhotosLink {
+	id: number;
+	icon: string;
+	title: string;
+}
+
+const photosLinks: PhotosLink[] = [
 	{
 		id: 1,
 		icon: "/icons/gicon1.svg",
@@ -191,7 +236,12 @@ const photosLinks = [
 	},
 ];
 
-const gallery = [
+export interface GalleryItem {
+	id: number;
+	img: string;
+}
+
+const gallery: GalleryItem[] = [
 	{
 		id: 1,
 		img: "/images/gal1.png",
@@ -496,8 +546,14 @@ export const locations = {
 
 const INITIAL_Z_INDEX = 1000;
 
+export interface WindowConfigItem {
+	isOpen: boolean;
+	zIndex: number;
+	data: any;
+}
+
 // Start off as closed
-const WINDOW_CONFIG = {
+const WINDOW_CONFIG: Record<string, WindowConfigItem> = {
 	finder: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
 	contact: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
 	resume: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },

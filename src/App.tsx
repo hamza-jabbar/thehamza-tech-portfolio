@@ -2,13 +2,13 @@ import { Draggable } from 'gsap/Draggable';
 import gsap from 'gsap';
 
 import { Navbar, Welcome, Dock, Text, Image, Home } from '#components';
-import { Terminal, Safari, Resume, Finder, Contact, Photos } from '#windows'
+import { Terminal, Safari, Resume, Finder, Contact, Photos } from '#windows';
 
 gsap.registerPlugin(Draggable);
 
 const App = () => {
   return (
-    <main>
+    <main className="w-dvw h-dvh overflow-hidden select-none">
       <Navbar />
       <Welcome />
       <Dock />
@@ -23,7 +23,7 @@ const App = () => {
       <Photos />
       <Home />
     </main>
-  )
-}
+  );
+};
 
 export default App;
