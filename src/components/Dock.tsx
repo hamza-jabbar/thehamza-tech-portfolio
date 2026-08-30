@@ -3,15 +3,17 @@ import { Tooltip } from "react-tooltip";
 import gsap from "gsap";
 import clsx from "clsx";
 
-import { dockApps } from "#constants";
+import { dockApps, locations } from "#constants";
 import { useGSAP } from "@gsap/react";
 import useWindowStore from "#store/window";
+import useLocationStore from "#store/location";
 
 const Dock = () => {
 	const dockRef = useRef<HTMLDivElement>(null);
 	const { openWindow, closeWindow, windows } = useWindowStore();
+	const { setActiveLocation } = useLocationStore();
 
-	// Animate using GSAP
+	// Animate desktop dock using GSAP
 	useGSAP(() => {
 		const dock = dockRef.current;
 		if (!dock) return;
@@ -40,9 +42,7 @@ const Dock = () => {
 		};
 
 		const handleMouseMove = (e: MouseEvent) => {
-			// Get starting position of the dock
 			const { left } = dock.getBoundingClientRect();
-
 			animateIcons(e.clientX - left);
 		};
 
@@ -65,12 +65,11 @@ const Dock = () => {
 		};
 	}, []);
 
-	// Function to open the app
+	// Function to open/toggle app
 	const toggleApp = (app: { id: string; canOpen: boolean }) => {
 		if (!app.canOpen) return;
 
 		const window = windows[app.id];
-
 		if (!window) {
 			console.error(`Window not found for app: ${app.id}`);
 			return;
@@ -79,37 +78,98 @@ const Dock = () => {
 		if (window.isOpen) {
 			closeWindow(app.id);
 		} else {
+			if (app.id === "finder") {
+				setActiveLocation(locations.work);
+			}
 			openWindow(app.id);
 		}
 	};
 
+	const mobileDockApps = [
+		{
+			id: "contact",
+			name: "Phone",
+			icon: "/images/contact.png",
+			onClick: () => openWindow("contact"),
+		},
+		{
+			id: "safari",
+			name: "Safari",
+			icon: "/images/safari.png",
+			onClick: () => openWindow("safari"),
+		},
+		{
+			id: "photos",
+			name: "Photos",
+			icon: "/images/photos.png",
+			onClick: () => openWindow("photos"),
+		},
+		{
+			id: "finder",
+			name: "Files",
+			icon: "/images/finder.png",
+			onClick: () => {
+				setActiveLocation(locations.work);
+				openWindow("finder");
+			},
+		},
+	];
+
 	return (
-		<section id="dock" className="absolute bottom-5 left-1/2 -translate-x-1/2 z-50 select-none max-sm:hidden">
-			<div ref={dockRef} className="bg-white/20 backdrop-blur-md justify-between rounded-2xl p-1.5 flex items-end gap-1.5">
-				{dockApps.map(({ id, name, icon, canOpen }) => (
-					<div key={id} className="relative flex justify-center">
+		<>
+			{/* ========================================================================= */}
+			{/* Mobile iPhone Glassmorphic Dock                                           */}
+			{/* ========================================================================= */}
+			<section className="md:hidden fixed bottom-4 inset-x-0 mx-auto w-[92%] max-w-sm z-40 select-none">
+				<div className="bg-white/25 backdrop-blur-2xl rounded-[2.2rem] p-3 flex justify-around items-center border border-white/20 shadow-2xl">
+					{mobileDockApps.map((app) => (
 						<button
+							key={app.id}
 							type="button"
-							className="dock-icon size-14 3xl:size-20 cursor-pointer"
-							aria-label={name}
-							data-tooltip-id="dock-tooltip"
-							data-tooltip-content={name}
-							data-tooltip-delay-show={150}
-							disabled={!canOpen}
-							onClick={() => toggleApp({ id, canOpen })}
+							onClick={app.onClick}
+							className="size-14 rounded-2xl bg-white/20 backdrop-blur-md p-2 shadow-md border border-white/20 flex items-center justify-center cursor-pointer active:scale-90 transition-transform duration-150 focus:outline-none"
+							aria-label={app.name}
 						>
 							<img
-								src={`/images/${icon}`}
-								alt={name}
-								loading="lazy"
-								className={clsx("object-cover object-center", !canOpen && "opacity-60")}
+								src={app.icon}
+								alt={app.name}
+								className="size-full object-contain drop-shadow-sm"
 							/>
 						</button>
-					</div>
-				))}
-				<Tooltip id="dock-tooltip" place="top" className="py-1! px-3! w-fit! text-center! text-xs! rounded-md! bg-blue-200! text-blue-900! shadow-2xl!" />
-			</div>
-		</section>
+					))}
+				</div>
+			</section>
+
+			{/* ========================================================================= */}
+			{/* Desktop macOS Magnification Dock                                          */}
+			{/* ========================================================================= */}
+			<section id="dock" className="hidden md:block absolute bottom-5 left-1/2 -translate-x-1/2 z-50 select-none">
+				<div ref={dockRef} className="bg-white/20 backdrop-blur-md justify-between rounded-2xl p-1.5 flex items-end gap-1.5">
+					{dockApps.map(({ id, name, icon, canOpen }) => (
+						<div key={id} className="relative flex justify-center">
+							<button
+								type="button"
+								className="dock-icon size-14 3xl:size-20 cursor-pointer"
+								aria-label={name}
+								data-tooltip-id="dock-tooltip"
+								data-tooltip-content={name}
+								data-tooltip-delay-show={150}
+								disabled={!canOpen}
+								onClick={() => toggleApp({ id, canOpen })}
+							>
+								<img
+									src={`/images/${icon}`}
+									alt={name}
+									loading="lazy"
+									className={clsx("object-cover object-center", !canOpen && "opacity-60")}
+								/>
+							</button>
+						</div>
+					))}
+					<Tooltip id="dock-tooltip" place="top" className="py-1! px-3! w-fit! text-center! text-xs! rounded-md! bg-blue-200! text-blue-900! shadow-2xl!" />
+				</div>
+			</section>
+		</>
 	);
 };
 

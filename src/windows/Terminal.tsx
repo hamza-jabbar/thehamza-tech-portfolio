@@ -5,52 +5,62 @@ import { WindowControls } from "#components";
 
 const Terminal = () => {
   return (
-    <>
-      <div className="flex items-center justify-between px-4 py-3 rounded-t-lg bg-gray-50 border-b border-gray-200 select-none text-sm text-gray-400">
+    <div className="flex flex-col h-full bg-white select-none overflow-hidden">
+      {/* Window Header */}
+      <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200 text-sm text-gray-400 shrink-0">
         <WindowControls target="terminal" />
-        <h2 className="font-bold text-sm text-center w-full text-gray-700">Tech Stack</h2>
+        <h2 className="font-bold text-sm text-center flex-1 text-gray-700">Skills & Tech Stack</h2>
+        <div className="w-12 md:hidden" />
       </div>
 
-      <div className="text-sm font-roboto p-5 text-gray-800">
-        <p>
-          <span className="font-bold">@hamza % </span> show techstack
-        </p>
-
-        <div className="flex items-center ms-10 mt-7 text-gray-500 font-semibold">
-          <div className="w-32">Category</div>
-          <div className="w-32">Technologies</div>
+      {/* Terminal Content */}
+      <div className="flex-1 overflow-y-auto p-4 md:p-5 text-xs md:text-sm font-roboto text-gray-800">
+        <div className="bg-gray-100/70 p-3 rounded-lg border border-gray-200/80 mb-4">
+          <p className="font-mono">
+            <span className="font-bold text-blue-600">@hamza</span>
+            <span className="text-gray-400"> % </span>
+            <span className="text-gray-900 font-semibold">show techstack --all</span>
+          </p>
         </div>
 
-        <ul className="py-5 my-5 border-y border-dashed border-gray-300 space-y-1">
+        <ul className="py-4 my-2 border-y border-dashed border-gray-300 space-y-3">
           {techStack.map(({ category, items }) => (
-            <li className="flex items-center" key={category}>
-              <Check className="text-[#00A154] w-5" size={20} />
-              <h3 className="font-semibold text-[#00A154] w-32 ms-5">{category}</h3>
+            <li
+              className="flex flex-col sm:flex-row sm:items-center gap-2 py-1"
+              key={category}
+            >
+              <div className="flex items-center gap-2 min-w-32.5">
+                <Check className="text-[#00A154] shrink-0" size={16} />
+                <h3 className="font-semibold text-[#00A154]">{category}</h3>
+              </div>
 
-              <ul className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-1.5 flex-wrap pl-6 sm:pl-0">
                 {items.map((item, i) => (
-                  <li key={i} className="text-gray-800">
+                  <span
+                    key={i}
+                    className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md text-xs border border-gray-200"
+                  >
                     {item}
-                    {i < items.length - 1 ? "," : ""}
-                  </li>
+                  </span>
                 ))}
-              </ul>
+              </div>
             </li>
           ))}
         </ul>
 
-        <div className="text-[#00A154] space-y-1">
-          <p className="flex items-center">
-            <Check size={20} className="w-5 me-5 inline" /> 5 of 5 stacks loaded successfully (100%)
+        <div className="text-[#00A154] space-y-1 mt-4 text-xs">
+          <p className="flex items-center gap-2">
+            <Check size={16} className="shrink-0" />
+            <span>6 of 6 categories loaded successfully (100%)</span>
           </p>
 
-          <p className="text-black flex items-center">
-            <Flag size={15} fill="black" className="w-5 me-5 inline" />
-            Render time: 6ms
+          <p className="text-gray-700 flex items-center gap-2">
+            <Flag size={14} fill="currentColor" className="shrink-0" />
+            <span>Render time: 4ms • Status: Ready to build</span>
           </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
