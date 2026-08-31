@@ -118,7 +118,7 @@ const Finder = () => {
     },
     {
       id: locations.trash.id,
-      name: "Trash",
+      name: "Archive",
       subtitle: "Archived files",
       icon: "/icons/trash.svg",
       rawLocation: locations.trash,
@@ -310,19 +310,19 @@ const Finder = () => {
       {/* ========================================================================= */}
       {/* Desktop macOS Finder Window                                               */}
       {/* ========================================================================= */}
-      <div className="hidden md:flex flex-col select-none">
-        <div className="flex items-center justify-between px-4 py-3 rounded-t-lg bg-gray-50 border-b border-gray-200 text-sm text-gray-400">
+      <div className="hidden md:flex flex-col select-none h-full w-full">
+        <div className="flex items-center justify-between px-4 py-3 rounded-t-lg bg-gray-50 border-b border-gray-200 text-sm text-gray-400 shrink-0">
           <WindowControls target="finder" />
           <Search className="p-1 hover:bg-gray-200 rounded cursor-default size-6" />
         </div>
 
-        <div className="bg-white flex h-full min-h-87.5">
-          <div className="w-48 bg-gray-50 border-r border-gray-200 flex flex-col p-5 space-y-3 shrink-0">
+        <div className="bg-white flex flex-1 h-full min-h-87.5 overflow-hidden">
+          <div className="w-48 bg-gray-50 border-r border-gray-200 flex flex-col p-5 space-y-3 shrink-0 overflow-y-auto">
             {renderDesktopList("Favorites", Object.values(locations) as FinderItem[])}
             {renderDesktopList("My Projects", locations.work.children as FinderItem[])}
           </div>
 
-          <ul className="flex-1 p-8 bg-white max-w-2xl relative min-h-75">
+          <ul className="flex-1 p-8 bg-white relative min-w-130 min-h-90 overflow-auto">
             {(activeLocation as FinderItem | null)?.children?.map((item) => (
               <li
                 key={item.id}

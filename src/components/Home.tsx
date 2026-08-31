@@ -35,7 +35,7 @@ const Home = () => {
     {
       id: "finder",
       name: "Files",
-      icon: "/images/finder.png",
+      icon: "/images/icons/files.svg",
       action: () => {
         setActiveLocation(locations.work);
         openWindow("finder");
@@ -44,37 +44,37 @@ const Home = () => {
     {
       id: "terminal",
       name: "Skills",
-      icon: "/images/terminal.png",
+      icon: "/images/icons/terminal.svg",
       action: () => openWindow("terminal"),
     },
     {
       id: "safari",
       name: "Blog",
-      icon: "/images/safari.png",
+      icon: "/images/icons/safari.svg",
       action: () => openWindow("safari"),
     },
     {
       id: "photos",
       name: "Photos",
-      icon: "/images/photos.png",
+      icon: "/images/icons/photos.svg",
       action: () => openWindow("photos"),
     },
     {
       id: "contact",
       name: "Contact",
-      icon: "/images/contact.png",
+      icon: "/images/icons/contacts.svg",
       action: () => openWindow("contact"),
     },
     {
       id: "resume",
       name: "Resume",
-      icon: "/images/pdf.png",
+      icon: "/images/icons/resume.svg",
       action: () => openWindow("resume"),
     },
     {
       id: "about",
       name: "About Me",
-      icon: "/images/txt.png",
+      icon: "/images/icons/resume.svg",
       action: () => {
         const aboutData = locations.about.children?.find((c) => c.fileType === "txt");
         openWindow("txtfile", aboutData);
@@ -82,7 +82,7 @@ const Home = () => {
     },
     {
       id: "trash",
-      name: "Trash",
+      name: "Archive",
       icon: "/images/trash.png",
       action: () => {
         setActiveLocation(locations.trash);
@@ -94,7 +94,7 @@ const Home = () => {
   return (
     <>
       {/* ========================================================================= */}
-      {/* Mobile iPhone SpringBoard (Grid of Apps + Search Pill)                     */}
+      {/* Mobile iPhone SpringBoard (Grid of Apps + Search Pill Coming soon)        */}
       {/* ========================================================================= */}
       <section className="md:hidden flex flex-col justify-between h-dvh pt-16 pb-28 px-4 overflow-y-auto z-10 select-none">
         <div>
@@ -107,7 +107,7 @@ const Home = () => {
                 onClick={app.action}
                 className="flex flex-col items-center group cursor-pointer active:scale-90 transition-transform duration-150 focus:outline-none"
               >
-                <div className="size-15 rounded-2xl bg-white/20 backdrop-blur-md p-2 shadow-lg border border-white/20 flex items-center justify-center overflow-hidden">
+                <div className="size-15 rounded-2xl bg-white/20 backdrop-blur-md shadow-lg border border-white/20 flex items-center justify-center overflow-hidden">
                   <img
                     src={app.icon}
                     alt={app.name}
@@ -123,12 +123,12 @@ const Home = () => {
         </div>
 
         {/* iOS Search Pill Button */}
-        <div className="flex justify-center mt-auto mb-2">
+        {/* <div className="flex justify-center mt-auto mb-2">
           <div className="flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white/90 text-xs font-medium shadow-md border border-white/10 active:scale-95 transition-transform cursor-pointer">
             <Search size={12} className="stroke-[2.5]" />
             <span>Search</span>
           </div>
-        </div>
+        </div> */}
       </section>
 
       {/* ========================================================================= */}
@@ -148,7 +148,7 @@ const Home = () => {
               <img
                 src="/images/folder.png"
                 alt={project.name}
-                className="group-hover:bg-gray-950/10 p-1 rounded-md transition-colors"
+                className="group-hover:bg-gray-950/10  rounded-md transition-colors"
               />
               <p className="text-sm text-white text-center px-1 rounded-md group-hover:bg-blue-500 transition-colors max-w-40">
                 {project.name}

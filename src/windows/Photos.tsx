@@ -61,7 +61,7 @@ const Photos = () => {
       {/* Main Content */}
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop Left Sidebar */}
-        <div className="hidden md:flex w-48 flex-none bg-gray-50 border-r border-gray-200 flex-col p-5 space-y-3">
+        <div className="hidden md:flex w-48 flex-none bg-gray-50 border-r border-gray-200 flex-col p-5 space-y-3 overflow-y-auto">
           <h2 className="text-xs font-medium text-gray-400 mb-1">Library</h2>
 
           <ul className="space-y-1">
@@ -101,7 +101,7 @@ const Photos = () => {
           </div>
 
           {/* Desktop Custom 5x5 Grid */}
-          <ul className="hidden md:grid grid-cols-5 grid-rows-5 gap-2.5 h-85">
+          <ul className="hidden md:grid grid-cols-5 grid-rows-5 gap-2.5 min-h-85 h-full">
             {gallery.map(({ id, img }, index) => (
               <li
                 key={id}
