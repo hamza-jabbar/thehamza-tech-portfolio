@@ -6,5 +6,7 @@ import Text from '#components/Text';
 import Image from '#components/Image';
 import Home from '#components/Home';
 import IPhoneStatusBar from '#components/IPhoneStatusBar';
+import Logo from '#components/Logo';
 
-export { Navbar, Welcome, Dock, WindowControls, Text, Image, Home, IPhoneStatusBar };
+export { Navbar, Welcome, Dock, WindowControls, Text, Image, Home, IPhoneStatusBar, Logo };
+

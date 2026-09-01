@@ -96,7 +96,7 @@ const Home = () => {
       {/* ========================================================================= */}
       {/* Mobile iPhone SpringBoard (Grid of Apps + Search Pill Coming soon)        */}
       {/* ========================================================================= */}
-      <section className="md:hidden flex flex-col justify-between h-dvh pt-16 pb-28 px-4 overflow-y-auto z-10 select-none">
+      <section className="md:hidden flex flex-col justify-between h-dvh pt-16 mt-8 pb-28 px-4 overflow-y-auto z-10 select-none">
         <div>
           {/* iOS 4-Column App Grid */}
           <div className="grid grid-cols-4 gap-y-6 gap-x-3 max-w-sm mx-auto">

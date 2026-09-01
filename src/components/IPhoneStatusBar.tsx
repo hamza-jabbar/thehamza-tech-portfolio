@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { Wifi } from "lucide-react";
+import Logo from "#components/Logo";
 
 const IPhoneStatusBar = () => {
   const [time, setTime] = useState(dayjs().format("h:mm"));
@@ -13,17 +14,16 @@ const IPhoneStatusBar = () => {
   }, []);
 
   return (
-    <div className="md:hidden fixed top-0 inset-x-0 z-40 px-6 pt-3 pb-1 flex items-center justify-between text-white select-none pointer-events-none">
+    <div className="md:hidden fixed top-0 inset-x-0 z-40 px-6 py-3 flex items-center justify-between text-white select-none pointer-events-none">
       {/* Left: Time */}
       <div className="w-16">
         <span className="text-sm font-semibold tracking-tight">{time}</span>
       </div>
 
       {/* Center: Dynamic Island / Notch Pill */}
-      <div className="pointer-events-auto flex items-center justify-between gap-2.5 bg-black/90 text-white px-3 py-1 rounded-full text-[10px] shadow-lg border border-white/10 transition-all hover:scale-105">
-        {/* <div className="size-2 rounded-full bg-emerald-500/80 animate-pulse" /> */}
-        <img src="/logo.svg" alt="logo" className="h-2 size-2 rounded-full bg-emerald-500/80 animate-pulse" />
-        <span className="font-medium text-xs text-white/90">Hamza's Portfolio</span>
+      <div className="pointer-events-auto flex items-center justify-between gap-3 bg-black/90 text-white py-2 px-5 rounded-full text-[10px] shadow-lg border border-white/10 transition-all hover:scale-105">
+        <Logo className="h-4 w-auto text-[#d33535] animate-pulse " />
+        <span className="font-bold text-xs text-white/90">Hamza's Portfolio</span>
       </div>
 
       {/* Right: Cellular, WiFi, Battery */}
