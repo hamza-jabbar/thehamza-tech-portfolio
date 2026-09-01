@@ -1,6 +1,4 @@
-https://www.youtube.com/watch?v=j9ZD_hlyHOA  ---  3:03:20
-
-Tech used
+Tech/Software used
 - Code Rabbit - Check code before deploying to main branch
 - zustand/immer - middleware
 - Tailwind - Styling
@@ -8,3 +6,5 @@ Tech used
 - gsap - Advanced Animations
 - High order components - Acts like a wrapper for all components
 - clsx - Add dynamic tailwind css classnames
+
+https://thehamza-portfolio.sanity.studio - Sanity Studio

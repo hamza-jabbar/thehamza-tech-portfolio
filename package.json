@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@sanity/client": "^8.4.0",
+    "@sanity/image-url": "^2.1.1",
     "@tailwindcss/vite": "^4.1.18",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",

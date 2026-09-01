@@ -2,8 +2,29 @@ import { techStack } from "#constants";
 import WindowWrapper from "#hoc/WindowWrapper";
 import { Check, Flag } from "lucide-react";
 import { WindowControls } from "#components";
+import { useSanityData } from "#hooks/useSanityData";
+import { useMemo } from "react";
 
 const Terminal = () => {
+  const { data, loading } = useSanityData();
+
+  // Build skill groups from Sanity: category → skill titles
+  // Falls back to constants while loading or if Sanity has no data
+  const skillGroups = useMemo(() => {
+    if (!loading && data.skillsCategories.length > 0) {
+      return data.skillsCategories.map((cat) => ({
+        category: cat.title,
+        items: data.skills
+          .filter((s) => s.category._id === cat._id)
+          .map((s) => s.subtitle ? `${s.title} — ${s.subtitle}` : s.title),
+      }));
+    }
+    return techStack;
+  }, [data.skillsCategories, data.skills, loading]);
+
+  const totalCategories = skillGroups.length;
+  const loadedCategories = skillGroups.filter((g) => g.items.length > 0).length;
+
   return (
     <div className="flex flex-col h-full bg-white select-none overflow-hidden">
       {/* Window Header */}
@@ -23,8 +44,12 @@ const Terminal = () => {
           </p>
         </div>
 
+        {loading && (
+          <p className="text-xs text-gray-400 animate-pulse mb-3">Fetching skills from Sanity…</p>
+        )}
+
         <ul className="py-4 my-2 border-y border-dashed border-gray-300 space-y-3">
-          {techStack.map(({ category, items }) => (
+          {skillGroups.map(({ category, items }) => (
             <li
               className="flex flex-col sm:flex-row sm:items-center gap-2 py-1"
               key={category}
@@ -51,7 +76,10 @@ const Terminal = () => {
         <div className="text-[#00A154] space-y-1 mt-4 text-xs">
           <p className="flex items-center gap-2">
             <Check size={16} className="shrink-0" />
-            <span>6 of 6 categories loaded successfully (100%)</span>
+            <span>
+              {loadedCategories} of {totalCategories} categories loaded successfully (
+              {totalCategories > 0 ? Math.round((loadedCategories / totalCategories) * 100) : 0}%)
+            </span>
           </p>
 
           <p className="text-gray-700 flex items-center gap-2">
