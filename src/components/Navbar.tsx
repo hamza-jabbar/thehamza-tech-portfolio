@@ -14,7 +14,7 @@ const Navbar = () => {
 			{/* Desktop macOS Menu Bar */}
 			<nav className="hidden md:flex justify-between items-center bg-white/50 backdrop-blur-3xl p-2 px-5 select-none relative z-30">
 				<div className="flex items-center gap-5">
-					<img src="/images/logo.svg" alt="logo" />
+					<img src="/logo.svg" alt="logo" className="h-5" />
 					<p className="font-bold text-sm text-gray-900">Hamza's Portfolio</p>
 
 					<ul className="flex items-center gap-5">

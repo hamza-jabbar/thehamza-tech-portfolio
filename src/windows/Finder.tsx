@@ -5,7 +5,10 @@ import useLocationStore from "#store/location";
 import { locations } from "#constants";
 import clsx from "clsx";
 import useWindowStore from "#store/window";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useSanityData } from "#hooks/useSanityData";
+import { projectImage } from "#lib/imageUrl";
+import type { SanityPortfolio, SanityProjectFile } from "#lib/queries";
 
 interface FinderItem {
   id: string | number;
@@ -22,11 +25,77 @@ interface FinderItem {
   [key: string]: unknown;
 }
 
+// Map a Sanity portfolio project → FinderItem folder shape
+function sanityProjectToFinderItem(project: SanityPortfolio, index: number): FinderItem {
+  const defaultPositions = [
+    "top-10 left-5",
+    "top-52 right-80",
+    "top-10 left-80",
+    "top-10 right-5",
+    "top-52 left-5",
+  ];
+
+  const children: FinderItem[] = (project.files ?? []).map((file: SanityProjectFile, fi: number) => {
+    const filePositions = [
+      "top-5 left-10",
+      "top-10 right-20",
+      "top-52 right-80",
+      "top-60 right-20",
+      "top-32 left-40",
+    ];
+
+    const iconMap: Record<string, string> = {
+      txt: "/images/txt.png",
+      url: "/images/safari.png",
+      pdf: "/images/pdf.png",
+      fig: "/images/plain.png",
+      img: "/images/image.png",
+    };
+
+    return {
+      id: file._key ?? fi,
+      name: file.name ?? "Untitled",
+      icon: iconMap[file.fileType ?? "txt"] ?? "/images/txt.png",
+      kind: "file",
+      fileType: file.fileType ?? "txt",
+      href: file.href,
+      position: file.position ?? filePositions[fi % filePositions.length],
+      description: file.description,
+      imageUrl: file.asset && file.assetUrl ? projectImage(file.asset) : undefined,
+    };
+  });
+
+  return {
+    id: project._id,
+    name: project.title,
+    icon: "/images/folder.png",
+    kind: "folder",
+    position: project.position ?? defaultPositions[index % defaultPositions.length],
+    children,
+  };
+}
+
 const Finder = () => {
   const { openWindow, closeWindow } = useWindowStore();
   const { activeLocation, setActiveLocation } = useLocationStore();
   const [mobileSearch, setMobileSearch] = useState("");
   const [isAtBrowseRoot, setIsAtBrowseRoot] = useState(false);
+  const { data, loading } = useSanityData();
+
+  // Build dynamic project folders from Sanity, falling back to constants while loading
+  const projectFolders: FinderItem[] = useMemo(() => {
+    if (!loading && data.portfolio.length > 0) {
+      return data.portfolio.map((p, i) => sanityProjectToFinderItem(p, i));
+    }
+    // Fallback to hardcoded constants while Sanity loads
+    return locations.work.children as FinderItem[];
+  }, [data.portfolio, loading]);
+
+  // Merged work location using live Sanity projects
+  const workLocation = useMemo(
+    () => ({ ...locations.work, children: projectFolders }),
+    [projectFolders]
+  );
 
   const openItem = (item: FinderItem) => {
     if (item.fileType === "pdf") return openWindow("resume", item);
@@ -42,7 +111,7 @@ const Finder = () => {
 
   // Determine hierarchy for iOS Files app
   const isWorkFolder = activeLocation?.id === locations.work.id;
-  const isProjectChild = locations.work.children?.some((p) => p.id === activeLocation?.id);
+  const isProjectChild = workLocation.children?.some((p) => p.id === activeLocation?.id);
   const currentFolderTitle = isAtBrowseRoot
     ? "Browse"
     : (activeLocation?.name ?? "Browse");
@@ -50,13 +119,10 @@ const Finder = () => {
   // Handle Mobile iOS Back Navigation
   const handleMobileBack = () => {
     if (isProjectChild) {
-      // Go back up to "Work" folder
-      setActiveLocation(locations.work);
+      setActiveLocation(workLocation);
     } else if (!isAtBrowseRoot && (isWorkFolder || activeLocation?.id !== undefined)) {
-      // Go back to Browse root
       setIsAtBrowseRoot(true);
     } else {
-      // Close Files app and return to iPhone Home Screen
       closeWindow("finder");
     }
   };
@@ -96,11 +162,11 @@ const Finder = () => {
 
   const browseLocations = [
     {
-      id: locations.work.id,
+      id: workLocation.id,
       name: "Work (Projects)",
-      subtitle: `${locations.work.children?.length ?? 3} project folders`,
+      subtitle: `${workLocation.children?.length ?? 0} project folders`,
       icon: "/images/folder.png",
-      rawLocation: locations.work,
+      rawLocation: workLocation,
     },
     {
       id: locations.about.id,
@@ -197,14 +263,18 @@ const Finder = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between px-1">
                 <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Projects ({locations.work.children?.length ?? 0})
+                  Projects ({projectFolders.length})
                 </h2>
                 <span className="text-xs text-blue-600 font-medium">Select a folder</span>
               </div>
 
+              {loading && (
+                <p className="text-xs text-gray-400 px-1 animate-pulse">Loading projects…</p>
+              )}
+
               <div className="grid grid-cols-1 gap-2.5">
-                {(locations.work.children as FinderItem[])
-                  ?.filter((p) => p.name.toLowerCase().includes(mobileSearch.toLowerCase()))
+                {projectFolders
+                  .filter((p) => p.name.toLowerCase().includes(mobileSearch.toLowerCase()))
                   .map((project) => (
                     <div
                       key={project.id}
@@ -294,7 +364,7 @@ const Finder = () => {
             type="button"
             onClick={() => {
               setIsAtBrowseRoot(false);
-              setActiveLocation(locations.work);
+              setActiveLocation(workLocation);
             }}
             className={clsx(
               "flex flex-col items-center gap-0.5 text-[10px] font-medium cursor-pointer",
@@ -313,16 +383,26 @@ const Finder = () => {
       <div className="hidden md:flex flex-col select-none h-full w-full">
         <div className="flex items-center justify-between px-4 py-3 rounded-t-lg bg-gray-50 border-b border-gray-200 text-sm text-gray-400 shrink-0">
           <WindowControls target="finder" />
-          <Search className="p-1 hover:bg-gray-200 rounded cursor-default size-6" />
+          <h2 className="font-bold text-sm text-center flex-1 text-gray-700 truncate px-2">
+            {activeLocation?.name ?? "Portfolio"}
+          </h2>
+          <div className="w-12 flex justify-end">
+            <Search className="p-1 hover:bg-gray-200 rounded cursor-default size-6 text-gray-500" />
+          </div>
         </div>
 
         <div className="bg-white flex flex-1 h-full min-h-87.5 overflow-hidden">
           <div className="w-48 bg-gray-50 border-r border-gray-200 flex flex-col p-5 space-y-3 shrink-0 overflow-y-auto">
             {renderDesktopList("Favorites", Object.values(locations) as FinderItem[])}
-            {renderDesktopList("My Projects", locations.work.children as FinderItem[])}
+            {renderDesktopList("My Projects", projectFolders)}
           </div>
 
           <ul className="flex-1 p-8 bg-white relative min-w-130 min-h-90 overflow-auto">
+            {loading && (activeLocation as FinderItem | null)?.id === workLocation.id && (
+              <li className="absolute top-4 left-4 text-xs text-gray-400 animate-pulse">
+                Loading projects…
+              </li>
+            )}
             {(activeLocation as FinderItem | null)?.children?.map((item) => (
               <li
                 key={item.id}

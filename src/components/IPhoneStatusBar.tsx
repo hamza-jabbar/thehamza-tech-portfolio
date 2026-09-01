@@ -21,7 +21,8 @@ const IPhoneStatusBar = () => {
 
       {/* Center: Dynamic Island / Notch Pill */}
       <div className="pointer-events-auto flex items-center justify-between gap-2.5 bg-black/90 text-white px-3 py-1 rounded-full text-[10px] shadow-lg border border-white/10 transition-all hover:scale-105">
-        <div className="size-2 rounded-full bg-emerald-500/80 animate-pulse" />
+        {/* <div className="size-2 rounded-full bg-emerald-500/80 animate-pulse" /> */}
+        <img src="/logo.svg" alt="logo" className="h-2 size-2 rounded-full bg-emerald-500/80 animate-pulse" />
         <span className="font-medium text-xs text-white/90">Hamza's Portfolio</span>
       </div>
 

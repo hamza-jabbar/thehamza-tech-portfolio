@@ -32,7 +32,9 @@
       "#store/*": ["./src/store/*"],
       "#hoc/*": ["./src/hoc/*"],
       "#windows": ["./src/windows/index.ts"],
-      "#windows/*": ["./src/windows/*"]
+      "#windows/*": ["./src/windows/*"],
+      "#lib/*": ["./src/lib/*"],
+      "#hooks/*": ["./src/hooks/*"]
     }
   },
   "include": ["src"]
