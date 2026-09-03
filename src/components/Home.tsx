@@ -96,7 +96,7 @@ const Home = () => {
       {/* ========================================================================= */}
       {/* Mobile iPhone SpringBoard (Grid of Apps + Search Pill Coming soon)        */}
       {/* ========================================================================= */}
-      <section className="md:hidden flex flex-col justify-between h-dvh pt-16 mt-8 pb-28 px-4 overflow-y-auto z-10 select-none">
+      <section className="md:hidden flex flex-col justify-between h-dvh pt-16 mt-10 px-4 overflow-y-auto z-10 select-none">
         <div>
           {/* iOS 4-Column App Grid */}
           <div className="grid grid-cols-4 gap-y-6 gap-x-3 max-w-sm mx-auto">
@@ -107,7 +107,7 @@ const Home = () => {
                 onClick={app.action}
                 className="flex flex-col items-center group cursor-pointer active:scale-90 transition-transform duration-150 focus:outline-none"
               >
-                <div className="size-15 rounded-xl bg-[#F7F7F7]/20 backdrop-blur-md shadow-lg border border-white/10 flex items-center justify-center overflow-hidden object-contain">
+                <div className="size-15 rounded-xl backdrop-blur-md shadow-lg border border-white/10 flex items-center justify-center overflow-hidden object-contain">
                   <img
                     src={app.icon}
                     alt={app.name}
