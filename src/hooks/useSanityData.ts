@@ -43,49 +43,69 @@ const EMPTY: SanityData = {
   skills: [],
 };
 
+let cachedData: SanityData | null = null;
+let fetchPromise: Promise<SanityData> | null = null;
+
+async function fetchSanityData(): Promise<SanityData> {
+  const [
+    background,
+    portfolio,
+    resume,
+    aboutMe,
+    photos,
+    skillsCategories,
+    skills,
+  ] = await Promise.all([
+    sanityFetch<SanityBackground | null>(backgroundQuery),
+    sanityFetch<SanityPortfolio[]>(portfolioQuery),
+    sanityFetch<SanityResume | null>(resumeQuery),
+    sanityFetch<SanityAboutMe | null>(aboutMeQuery),
+    sanityFetch<SanityPhoto[]>(photosQuery),
+    sanityFetch<SanitySkillsCategory[]>(skillsCategoriesQuery),
+    sanityFetch<SanitySkill[]>(skillsQuery),
+  ]);
+
+  const result: SanityData = { background, portfolio, resume, aboutMe, photos, skillsCategories, skills };
+  cachedData = result;
+  return result;
+}
+
 export function useSanityData(): UseSanityDataReturn {
-  const [data, setData] = useState<SanityData>(EMPTY);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<SanityData>(cachedData ?? EMPTY);
+  const [loading, setLoading] = useState(!cachedData);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
-    async function fetchAll() {
-      try {
-        const [
-          background,
-          portfolio,
-          resume,
-          aboutMe,
-          photos,
-          skillsCategories,
-          skills,
-        ] = await Promise.all([
-          sanityFetch<SanityBackground | null>(backgroundQuery),
-          sanityFetch<SanityPortfolio[]>(portfolioQuery),
-          sanityFetch<SanityResume | null>(resumeQuery),
-          sanityFetch<SanityAboutMe | null>(aboutMeQuery),
-          sanityFetch<SanityPhoto[]>(photosQuery),
-          sanityFetch<SanitySkillsCategory[]>(skillsCategoriesQuery),
-          sanityFetch<SanitySkill[]>(skillsQuery),
-        ]);
+    if (cachedData) {
+      setData(cachedData);
+      setLoading(false);
+      return;
+    }
 
+    if (!fetchPromise) {
+      fetchPromise = fetchSanityData();
+    }
+
+    fetchPromise
+      .then((res) => {
         if (!cancelled) {
-          setData({ background, portfolio, resume, aboutMe, photos, skillsCategories, skills });
+          setData(res);
+          setLoading(false);
         }
-      } catch (err) {
+      })
+      .catch((err) => {
         if (!cancelled) {
           console.error('[Sanity] Failed to fetch data:', err);
           setError(err instanceof Error ? err : new Error(String(err)));
+          setLoading(false);
         }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
+      });
 
-    fetchAll();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return { data, loading, error };
