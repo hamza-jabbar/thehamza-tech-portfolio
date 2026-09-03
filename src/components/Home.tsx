@@ -107,11 +107,11 @@ const Home = () => {
                 onClick={app.action}
                 className="flex flex-col items-center group cursor-pointer active:scale-90 transition-transform duration-150 focus:outline-none"
               >
-                <div className="size-15 rounded-2xl bg-white/20 backdrop-blur-md shadow-lg border border-white/20 flex items-center justify-center overflow-hidden">
+                <div className="size-15 rounded-xl bg-[#F7F7F7]/20 backdrop-blur-md shadow-lg border border-white/10 flex items-center justify-center overflow-hidden object-contain">
                   <img
                     src={app.icon}
                     alt={app.name}
-                    className="size-full object-contain drop-shadow-sm"
+                    className="size-full drop-shadow-sm"
                   />
                 </div>
                 <span className="text-[11px] font-medium text-white text-center mt-1.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] tracking-tight truncate w-full px-0.5">

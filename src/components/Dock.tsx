@@ -121,19 +121,19 @@ const Dock = () => {
 			{/* Mobile iPhone Glassmorphic Dock                                           */}
 			{/* ========================================================================= */}
 			<section className="md:hidden fixed bottom-4 inset-x-0 mx-auto w-[92%] max-w-sm z-40 select-none">
-				<div className="bg-white/25 backdrop-blur-2xl rounded-3xl p-3 flex justify-around items-center border border-white/20 shadow-2xl">
+				<div className="bg-white/25 backdrop-blur-2xl rounded-xl px-2 py-3 flex justify-around items-center border border-white/20 shadow-2xl">
 					{mobileDockApps.map((app) => (
 						<button
 							key={app.id}
 							type="button"
 							onClick={app.onClick}
-							className="size-14 rounded-2xl bg-white/20 backdrop-blur-md shadow-md border border-white/20 flex items-center justify-center cursor-pointer active:scale-90 transition-transform duration-150 focus:outline-none"
+							className="size-14 rounded-xl bg-white/20 backdrop-blur-md shadow-md border border-white/20 flex items-center justify-center cursor-pointer active:scale-90 transition-transform duration-150 focus:outline-none"
 							aria-label={app.name}
 						>
 							<img
 								src={app.icon}
 								alt={app.name}
-								className="size-full object-contain drop-shadow-sm"
+								className="size-full object-contain drop-shadow-sm rounded-lg"
 							/>
 						</button>
 					))}
