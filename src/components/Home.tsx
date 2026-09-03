@@ -74,7 +74,7 @@ const Home = () => {
     {
       id: "about",
       name: "About Me",
-      icon: "/images/icons/resume.svg",
+      icon: "/images/icons/about-me.svg",
       action: () => {
         const aboutData = locations.about.children?.find((c) => c.fileType === "txt");
         openWindow("txtfile", aboutData);
