@@ -1,8 +1,10 @@
+"use client";
+
 import useWindowStore from "#store/window";
 import { useGSAP } from "@gsap/react";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
-import { Draggable } from "gsap/Draggable";
+import { Draggable } from "gsap/all";
 import type { ComponentType } from "react";
 import clsx from "clsx";
 
@@ -182,6 +184,7 @@ const WindowWrapper = <P extends object>(Component: ComponentType<P>, windowKey:
 				id={windowKey}
 				ref={ref}
 				style={{ zIndex }}
+				onMouseDown={() => focusWindow(windowKey)}
 				className={clsx(
 					"fixed inset-0 w-full h-full z-50 bg-white flex flex-col overflow-hidden",
 					"md:fixed-none md:absolute md:inset-auto md:h-auto md:w-auto md:rounded-xl md:shadow-2xl md:drop-shadow-2xl md:flex md:flex-col",
@@ -207,7 +210,10 @@ const WindowWrapper = <P extends object>(Component: ComponentType<P>, windowKey:
 				<div className="md:hidden w-full py-2 bg-gray-50 border-t border-gray-100 flex justify-center items-center shrink-0">
 					<button
 						type="button"
-						onClick={() => closeWindow(windowKey)}
+						onClick={(e) => {
+							e.stopPropagation();
+							closeWindow(windowKey);
+						}}
 						className="w-32 h-1 bg-black/40 hover:bg-black/60 rounded-full cursor-pointer active:scale-95 transition-all"
 						aria-label="Home"
 						title="Swipe or Tap to go Home"
@@ -222,6 +228,4 @@ const WindowWrapper = <P extends object>(Component: ComponentType<P>, windowKey:
 	return Wrapped;
 };
 
-
 export default WindowWrapper;
-

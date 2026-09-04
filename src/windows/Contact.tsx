@@ -1,3 +1,5 @@
+"use client";
+
 import { WindowControls } from "#components";
 import WindowWrapper from "#hoc/WindowWrapper";
 import { Mail, Send } from "lucide-react";

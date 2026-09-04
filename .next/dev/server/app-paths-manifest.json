@@ -1,0 +1,4 @@
+{
+  "/[...windowRoute]/page": "app/[...windowRoute]/page.js",
+  "/page": "app/page.js"
+}

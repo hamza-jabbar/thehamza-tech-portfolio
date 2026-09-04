@@ -1,3 +1,5 @@
+"use client";
+
 import { Search } from "lucide-react";
 import WindowWrapper from "#hoc/WindowWrapper";
 import WindowControls from "#components/WindowControls";

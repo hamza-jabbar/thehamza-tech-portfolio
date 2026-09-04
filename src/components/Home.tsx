@@ -1,7 +1,9 @@
+"use client";
+
 import { locations } from "#constants";
 import { useGSAP } from "@gsap/react";
 import clsx from "clsx";
-import { Draggable } from "gsap/Draggable";
+import { Draggable } from "gsap/all";
 import useWindowStore from "#store/window";
 import useLocationStore from "#store/location";
 import { Search } from "lucide-react";
@@ -34,7 +36,7 @@ const Home = () => {
   const mobileApps: MobileApp[] = [
     {
       id: "finder",
-      name: "Files",
+      name: "Work",
       icon: "/images/icons/files.svg",
       action: () => {
         setActiveLocation(locations.work);
@@ -49,7 +51,7 @@ const Home = () => {
     },
     {
       id: "safari",
-      name: "Blog",
+      name: "Projects",
       icon: "/images/icons/safari.svg",
       action: () => openWindow("safari"),
     },

@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef } from "react";
 import { Tooltip } from "react-tooltip";
 import gsap from "gsap";

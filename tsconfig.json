@@ -1,41 +1,74 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
-
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true,
-
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
-
-    /* Paths */
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
-      "#*": ["./src/*"],
-      "#components": ["./src/components/index.ts"],
-      "#components/*": ["./src/components/*"],
-      "#constants": ["./src/constants/index.ts"],
-      "#constants/*": ["./src/constants/*"],
-      "#store/*": ["./src/store/*"],
-      "#hoc/*": ["./src/hoc/*"],
-      "#windows": ["./src/windows/index.ts"],
-      "#windows/*": ["./src/windows/*"],
-      "#lib/*": ["./src/lib/*"],
-      "#hooks/*": ["./src/hooks/*"]
+      "#*": [
+        "./src/*"
+      ],
+      "#components": [
+        "./src/components/index.ts"
+      ],
+      "#components/*": [
+        "./src/components/*"
+      ],
+      "#constants": [
+        "./src/constants/index.ts"
+      ],
+      "#constants/*": [
+        "./src/constants/*"
+      ],
+      "#store/*": [
+        "./src/store/*"
+      ],
+      "#hoc/*": [
+        "./src/hoc/*"
+      ],
+      "#windows": [
+        "./src/windows/index.ts"
+      ],
+      "#windows/*": [
+        "./src/windows/*"
+      ],
+      "#lib/*": [
+        "./src/lib/*"
+      ],
+      "#hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
-  "include": ["src"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
