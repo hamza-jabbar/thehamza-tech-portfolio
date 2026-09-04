@@ -1,3 +1,5 @@
+"use client";
+
 import dayjs from "dayjs";
 import { navIcons, navLinks } from "#constants";
 import useWindowStore from "#store/window";
@@ -5,7 +7,12 @@ import IPhoneStatusBar from "#components/IPhoneStatusBar";
 import Logo from "#components/Logo";
 
 const Navbar = () => {
-	const { openWindow } = useWindowStore(); // Open window when navbar item is clicked
+	const { openWindow, focusWindow } = useWindowStore();
+
+	const handleNavClick = (type: string) => {
+		openWindow(type);
+		focusWindow(type);
+	};
 
 	return (
 		<>
@@ -20,7 +27,7 @@ const Navbar = () => {
 
 					<ul className="flex items-center gap-5">
 						{navLinks.map(({ id, name, type }) => (
-							<li key={id} onClick={() => openWindow(type)} className="cursor-pointer">
+							<li key={id} onClick={() => handleNavClick(type)} className="cursor-pointer">
 								<p className="text-sm hover:underline transition-all">{name}</p>
 							</li>
 						))}

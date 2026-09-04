@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 
 const Logo = ({ fill = "currentColor", className, ...props }: React.SVGProps<SVGSVGElement>) => (

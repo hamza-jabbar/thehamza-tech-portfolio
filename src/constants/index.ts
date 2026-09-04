@@ -7,8 +7,13 @@ export interface NavLink {
 const navLinks: NavLink[] = [
 	{
 		id: 1,
-		name: "Projects",
+		name: "Work",
 		type: "finder",
+	},
+	{
+		id: 2,
+		name: "Projects",
+		type: "safari",
 	},
 	{
 		id: 3,
@@ -57,21 +62,21 @@ const dockApps: DockApp[] = [
 	{
 		// "Finder"
 		id: "finder",
-		name: "Portfolio",
+		name: "Work",
 		icon: "/images/finder.png",
 		canOpen: true,
 	},
 	{
 		// "Safari"
 		id: "safari",
-		name: "Blog",
+		name: "Projects",
 		icon: "/images/safari.png",
 		canOpen: true,
 	},
 	{
 		// "Photos"
 		id: "photos",
-		name: "Work",
+		name: "Photos",
 		icon: "/images/photos.png",
 		canOpen: true,
 	},

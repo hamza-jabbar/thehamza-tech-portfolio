@@ -1,3 +1,5 @@
+"use client";
+
 import { WindowControls } from "#components";
 import WindowWrapper from "#hoc/WindowWrapper";
 import { ChevronRight, ExternalLink, FileText, Folder as FolderIcon, Image as ImageIcon, LayoutGrid, Search, Smartphone } from "lucide-react";

@@ -1,3 +1,5 @@
+"use client";
+
 import { WindowControls } from "#components";
 import { blogPosts } from "#constants";
 import WindowWrapper from "#hoc/WindowWrapper";

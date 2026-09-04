@@ -1,3 +1,5 @@
+"use client";
+
 import { techStack } from "#constants";
 import WindowWrapper from "#hoc/WindowWrapper";
 import { Check, Flag } from "lucide-react";

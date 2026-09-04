@@ -1,39 +1,27 @@
+"use client";
+
+import dynamic from "next/dynamic";
 import { WindowControls } from "#components/index";
 import WindowWrapper from "#hoc/WindowWrapper";
 import { Download, FileText } from "lucide-react";
-import { Document, Page, pdfjs } from "react-pdf";
-import { useState, useEffect } from "react";
 import { useSanityData } from "#hooks/useSanityData";
 
-import "react-pdf/dist/Page/AnnotationLayer.css";
-import "react-pdf/dist/Page/TextLayer.css";
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
+const PDFViewer = dynamic(() => import("#components/PDFViewer"), {
+  ssr: false,
+  loading: () => (
+    <div className="p-12 flex flex-col items-center gap-3 text-gray-400">
+      <FileText className="animate-pulse size-10 text-blue-500" />
+      <p className="text-xs">Loading Resume…</p>
+    </div>
+  ),
+});
 
 const Resume = () => {
-  const [pageWidth, setPageWidth] = useState<number>(() => {
-    if (typeof window !== "undefined") {
-      return Math.min(window.innerWidth - 32, 600);
-    }
-    return 600;
-  });
-
   const { data, loading } = useSanityData();
 
   // Resolve PDF URL: Sanity asset first, fallback to local file
-  const pdfUrl = data.resume?.fileUrl ?? "files/resume.pdf";
+  const pdfUrl = data.resume?.fileUrl ?? "/files/resume.pdf";
   const resumeTitle = data.resume?.title ?? "Resume / CV";
-
-  useEffect(() => {
-    const handleResize = () => {
-      setPageWidth(Math.min(window.innerWidth - 32, 600));
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   return (
     <div className="flex flex-col h-full bg-gray-100/50 select-none overflow-hidden">
@@ -60,36 +48,7 @@ const Resume = () => {
             <p className="text-xs">Loading Resume…</p>
           </div>
         ) : (
-          <div className="shadow-lg rounded-lg overflow-hidden bg-white max-w-full">
-            <Document
-              file={pdfUrl}
-              loading={
-                <div className="p-12 flex flex-col items-center gap-3 text-gray-400">
-                  <FileText className="animate-pulse size-10 text-blue-500" />
-                  <p className="text-xs">Loading Resume...</p>
-                </div>
-              }
-              error={
-                <div className="p-8 text-center space-y-3">
-                  <p className="text-sm text-gray-600">Preview not available in this browser.</p>
-                  <a
-                    href={pdfUrl}
-                    download
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-medium"
-                  >
-                    <Download size={14} /> Download PDF
-                  </a>
-                </div>
-              }
-            >
-              <Page
-                pageNumber={1}
-                width={pageWidth}
-                renderTextLayer
-                renderAnnotationLayer
-              />
-            </Document>
-          </div>
+          <PDFViewer pdfUrl={pdfUrl} />
         )}
       </div>
     </div>

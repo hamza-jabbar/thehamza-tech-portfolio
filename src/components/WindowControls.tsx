@@ -1,3 +1,5 @@
+"use client";
+
 import useWindowStore from "#store/window";
 import { ChevronLeft } from "lucide-react";
 
