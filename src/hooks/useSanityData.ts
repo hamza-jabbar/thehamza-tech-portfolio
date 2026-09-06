@@ -8,14 +8,12 @@ import {
   resumeQuery,
   aboutMeQuery,
   photosQuery,
-  skillsCategoriesQuery,
   skillsQuery,
   type SanityBackground,
   type SanityPortfolio,
   type SanityResume,
   type SanityAboutMe,
   type SanityPhoto,
-  type SanitySkillsCategory,
   type SanitySkill,
 } from '#lib/queries';
 
@@ -25,7 +23,6 @@ export interface SanityData {
   resume: SanityResume | null;
   aboutMe: SanityAboutMe | null;
   photos: SanityPhoto[];
-  skillsCategories: SanitySkillsCategory[];
   skills: SanitySkill[];
 }
 
@@ -41,7 +38,6 @@ const EMPTY: SanityData = {
   resume: null,
   aboutMe: null,
   photos: [],
-  skillsCategories: [],
   skills: [],
 };
 
@@ -55,7 +51,6 @@ async function fetchSanityData(): Promise<SanityData> {
     resume,
     aboutMe,
     photos,
-    skillsCategories,
     skills,
   ] = await Promise.all([
     sanityFetch<SanityBackground | null>(backgroundQuery),
@@ -63,11 +58,10 @@ async function fetchSanityData(): Promise<SanityData> {
     sanityFetch<SanityResume | null>(resumeQuery),
     sanityFetch<SanityAboutMe | null>(aboutMeQuery),
     sanityFetch<SanityPhoto[]>(photosQuery),
-    sanityFetch<SanitySkillsCategory[]>(skillsCategoriesQuery),
     sanityFetch<SanitySkill[]>(skillsQuery),
   ]);
 
-  const result: SanityData = { background, portfolio, resume, aboutMe, photos, skillsCategories, skills };
+  const result: SanityData = { background, portfolio, resume, aboutMe, photos, skills };
   cachedData = result;
   return result;
 }

@@ -22,20 +22,27 @@ const Photos = () => {
   const [activeTab, setActiveTab] = useState<string | number>("all");
   const { data, loading } = useSanityData();
 
-  // Build sidebar tabs from Sanity skillsCategories, falling back to constants
+  // Build sidebar tabs from the unique categories present in the fetched photos
   const tabs = useMemo(() => {
-    if (!loading && data.skillsCategories.length > 0) {
+    const all = { id: "all", title: "Library", icon: "/icons/gicon1.svg" };
+    if (!loading && data.photos.length > 0) {
+      const icons = ["/icons/gicon1.svg", "/icons/gicon2.svg", "/icons/file.svg", "/icons/gicon4.svg", "/icons/gicon5.svg"];
+      const seen = new Map<string, { id: string; title: string }>();
+      data.photos.forEach((photo) => {
+        if (photo.category && !seen.has(photo.category._id)) {
+          seen.set(photo.category._id, { id: photo.category._id, title: photo.category.title });
+        }
+      });
       return [
-        { id: "all", title: "Library", icon: "/icons/gicon1.svg" },
-        ...data.skillsCategories.map((cat, i) => ({
-          id: cat._id,
-          title: cat.title,
-          icon: ["/icons/gicon1.svg", "/icons/gicon2.svg", "/icons/file.svg", "/icons/gicon4.svg", "/icons/gicon5.svg"][i % 5],
+        all,
+        ...Array.from(seen.values()).map((cat, i) => ({
+          ...cat,
+          icon: icons[i % icons.length],
         })),
       ];
     }
-    return [{ id: "all", title: "Library", icon: "/icons/gicon1.svg" }, ...photosLinks.map((l) => ({ ...l, id: String(l.id) }))];
-  }, [data.skillsCategories, loading]);
+    return [all, ...photosLinks.map((l) => ({ ...l, id: String(l.id) }))];
+  }, [data.photos, loading]);
 
   // Build gallery items from Sanity photos, falling back to constants
   const galleryItems = useMemo(() => {

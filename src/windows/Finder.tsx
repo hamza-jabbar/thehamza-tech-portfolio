@@ -9,73 +9,7 @@ import clsx from "clsx";
 import useWindowStore from "#store/window";
 import { useState, useMemo } from "react";
 import { useSanityData } from "#hooks/useSanityData";
-import { projectImage } from "#lib/imageUrl";
-import type { SanityPortfolio, SanityProjectFile } from "#lib/queries";
-
-interface FinderItem {
-  id: string | number;
-  name: string;
-  icon: string;
-  fileType?: string;
-  kind?: string;
-  href?: string;
-  position?: string;
-  subtitle?: string;
-  description?: string[];
-  imageUrl?: string;
-  children?: FinderItem[];
-  [key: string]: unknown;
-}
-
-// Map a Sanity portfolio project → FinderItem folder shape
-function sanityProjectToFinderItem(project: SanityPortfolio, index: number): FinderItem {
-  const defaultPositions = [
-    "top-10 left-5",
-    "top-52 right-80",
-    "top-10 left-80",
-    "top-10 right-5",
-    "top-52 left-5",
-  ];
-
-  const children: FinderItem[] = (project.files ?? []).map((file: SanityProjectFile, fi: number) => {
-    const filePositions = [
-      "top-5 left-10",
-      "top-10 right-20",
-      "top-52 right-80",
-      "top-60 right-20",
-      "top-32 left-40",
-    ];
-
-    const iconMap: Record<string, string> = {
-      txt: "/images/txt.png",
-      url: "/images/safari.png",
-      pdf: "/images/pdf.png",
-      fig: "/images/plain.png",
-      img: "/images/image.png",
-    };
-
-    return {
-      id: file._key ?? fi,
-      name: file.name ?? "Untitled",
-      icon: iconMap[file.fileType ?? "txt"] ?? "/images/txt.png",
-      kind: "file",
-      fileType: file.fileType ?? "txt",
-      href: file.href,
-      position: file.position ?? filePositions[fi % filePositions.length],
-      description: file.description,
-      imageUrl: file.asset && file.assetUrl ? projectImage(file.asset) : undefined,
-    };
-  });
-
-  return {
-    id: project._id,
-    name: project.title,
-    icon: "/images/folder.png",
-    kind: "folder",
-    position: project.position ?? defaultPositions[index % defaultPositions.length],
-    children,
-  };
-}
+import { sanityProjectToFinderItem, type FinderItem } from "#lib/finderUtils";
 
 const Finder = () => {
   const { openWindow, closeWindow } = useWindowStore();
