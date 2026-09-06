@@ -62,7 +62,7 @@ const Contact = () => {
           {/* Quick Email Action Button */}
           <a
             href={`mailto:${email}`}
-            className="mt-2 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#007AFF] text-white text-xs font-semibold shadow-sm hover:bg-blue-600 active:scale-95 transition-all"
+            className="mt-2 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#D33535] text-white text-xs font-semibold shadow-sm hover:bg-[#1F1F1F] active:scale-95 transition-all"
           >
             <Mail size={14} />
             <span>{email}</span>
