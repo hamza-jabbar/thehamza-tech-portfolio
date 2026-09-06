@@ -2,27 +2,40 @@
 
 import { techStack } from "#constants";
 import WindowWrapper from "#hoc/WindowWrapper";
-import { Check, Flag } from "lucide-react";
+import { Check, Flag, Folder as FolderIcon } from "lucide-react";
 import { WindowControls } from "#components";
 import { useSanityData } from "#hooks/useSanityData";
 import { useMemo } from "react";
+import { useWindowRouteSync } from "#hooks/useWindowRouteSync";
+import { sanityProjectToFinderItem } from "#lib/finderUtils";
 
 const Terminal = () => {
   const { data, loading } = useSanityData();
+  const { navigateToWindow } = useWindowRouteSync();
 
-  // Build skill groups from Sanity: category → skill titles
-  // Falls back to constants while loading or if Sanity has no data
+  // Each Skill document is now a category:
+  //   skill.title  → category heading
+  //   skill.skills → sub-skill chip labels
+  //   skill.portfolio → linked Finder project folders
   const skillGroups = useMemo(() => {
-    if (!loading && data.skillsCategories.length > 0) {
-      return data.skillsCategories.map((cat) => ({
-        category: cat.title,
-        items: data.skills
-          .filter((s) => s.category._id === cat._id)
-          .map((s) => s.subtitle ? `${s.title} — ${s.subtitle}` : s.title),
+    if (!loading && data.skills.length > 0) {
+      return data.skills.map((skill) => ({
+        category: skill.title,
+        items: skill.skills ?? [],
+        portfolio: skill.portfolio ?? [],
       }));
     }
-    return techStack;
-  }, [data.skillsCategories, data.skills, loading]);
+    return techStack.map((g) => ({ ...g, portfolio: [] }));
+  }, [data.skills, loading]);
+
+  // Pre-build a lookup of Sanity portfolio → FinderItem for fast access
+  const finderItemMap = useMemo(() => {
+    const map = new Map<string, ReturnType<typeof sanityProjectToFinderItem>>();
+    data.portfolio.forEach((p, i) => {
+      map.set(p._id, sanityProjectToFinderItem(p, i));
+    });
+    return map;
+  }, [data.portfolio]);
 
   const totalCategories = skillGroups.length;
   const loadedCategories = skillGroups.filter((g) => g.items.length > 0).length;
@@ -47,30 +60,54 @@ const Terminal = () => {
         </div>
 
         {loading && (
-          <p className="text-xs text-gray-400 animate-pulse mb-3">Fetching skills from Sanity…</p>
+          <p className="text-xs text-gray-400 animate-pulse mb-3">Fetching skills…</p>
         )}
 
-        <ul className="py-4 my-2 border-y border-dashed border-gray-300 space-y-3">
-          {skillGroups.map(({ category, items }) => (
+        <ul className="py-4 my-2 border-y border-dashed border-gray-300 space-y-4">
+          {skillGroups.map(({ category, items, portfolio }) => (
             <li
-              className="flex flex-col sm:flex-row sm:items-center gap-2 py-1"
+              className="flex flex-col gap-2 py-1"
               key={category}
             >
-              <div className="flex items-center gap-2 min-w-32.5">
+              {/* Category heading */}
+              <div className="flex items-center gap-2">
                 <Check className="text-[#00A154] shrink-0" size={16} />
                 <h3 className="font-semibold text-[#00A154]">{category}</h3>
               </div>
 
-              <div className="flex items-center gap-1.5 flex-wrap pl-6 sm:pl-0">
-                {items.map((item, i) => (
-                  <span
-                    key={i}
-                    className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md text-xs border border-gray-200"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
+              {/* Sub-skill chips */}
+              {items.length > 0 && (
+                <div className="flex items-center gap-1.5 flex-wrap pl-6">
+                  {items.map((item, i) => (
+                    <span
+                      key={i}
+                      className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md text-xs border border-gray-200"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Linked portfolio project buttons */}
+              {portfolio.length > 0 && (
+                <div className="flex items-center gap-2 flex-wrap pl-6">
+                  {portfolio.map((proj) => {
+                    const finderItem = finderItemMap.get(proj._id);
+                    if (!finderItem) return null;
+                    return (
+                      <button
+                        key={proj._id}
+                        onClick={() => navigateToWindow("finder", finderItem)}
+                        className="flex items-center gap-1 text-xs text-blue-500 hover:text-blue-700 hover:underline transition-colors"
+                      >
+                        <FolderIcon size={12} className="shrink-0" />
+                        {proj.title}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </li>
           ))}
         </ul>

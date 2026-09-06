@@ -18,10 +18,9 @@ export interface SanitySkillsCategory {
 
 export interface SanitySkill {
   _id: string;
-  title: string;
-  subtitle?: string;
-  category: { _id: string; title: string };
-  portfolio?: Array<{ _id: string; title: string }>;
+  title: string;                                        // → category heading in Terminal
+  skills?: string[];                                    // → sub-skill chip labels
+  portfolio?: Array<{ _id: string; title: string }>;    // → linked project folders
 }
 
 export interface SanityProjectFile {
@@ -30,7 +29,7 @@ export interface SanityProjectFile {
   fileType?: 'img' | 'pdf' | 'url' | 'fig' | 'txt';
   href?: string;
   asset?: SanityImageAsset;
-  assetUrl?: string;       // resolved by GROQ
+  assetUrl?: string;                                    // resolved by GROQ
   position?: string;
   description?: string[];
 }
@@ -160,8 +159,7 @@ export const skillsQuery = /* groq */ `
   *[_type == "skill"] | order(_createdAt asc) {
     _id,
     title,
-    subtitle,
-    "category": category->{ _id, title },
+    skills,
     "portfolio": portfolio[]->{ _id, title }
   }
 `;
