@@ -1427,6 +1427,10 @@
     background-color: #007aff;
   }
 
+  .bg-\[\#D33535\] {
+    background-color: #d33535;
+  }
+
   .bg-\[\#ff6157\] {
     background-color: #ff6157;
   }
@@ -2146,6 +2150,10 @@
 
     .hover\:scale-\[1\.02\]:hover {
       scale: 1.02;
+    }
+
+    .hover\:bg-\[\#1F1F1F\]:hover {
+      background-color: #1f1f1f;
     }
 
     .hover\:bg-black\/60:hover {

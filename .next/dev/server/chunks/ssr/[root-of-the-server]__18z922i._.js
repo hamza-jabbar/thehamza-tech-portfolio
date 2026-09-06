@@ -1364,33 +1364,38 @@ const renderText = (text, className, baseWeight = 400)=>{
         }, i, false, {
             fileName: "[project]/src/components/Welcome.tsx",
             lineNumber: 24,
-            columnNumber: 9
+            columnNumber: 3
         }, ("TURBOPACK compile-time value", void 0)));
 };
 const setupTextHover = (container, type)=>{
     if (!container) return ()=>{};
-    const letters = container.querySelectorAll("span");
+    const letters = Array.from(container.querySelectorAll("span"));
     const { min, max, default: base } = FONT_WEIGHTS[type];
-    const animateLetter = (letter, weight, duration = 0.25)=>{
-        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$gsap$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["default"].to(letter, {
-            duration,
-            ease: "power2.out",
-            fontVariationSettings: `'wght' ${weight}`
+    // Pre-compile one quickTo setter per letter — no new tweens on every mousemove
+    const setters = letters.map((el)=>{
+        const proxy = {
+            wght: base
+        };
+        const setter = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$gsap$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["default"].quickTo(proxy, "wght", {
+            duration: 0.4,
+            ease: "power3.out",
+            onUpdate () {
+                el.style.fontVariationSettings = `'wght' ${proxy.wght}`;
+            }
         });
-    };
+        return setter;
+    });
     const handleMouseMove = (e)=>{
-        // Get starting position of the characters
         const { left } = container.getBoundingClientRect();
         const mouseX = e.clientX - left;
-        // When mouse moves over the letters, the font weight increases
-        letters.forEach((letter)=>{
-            const { left: l, width: w } = letter.getBoundingClientRect(); // Get position of the letter
-            const distance = Math.abs(mouseX - (l - left + w / 2)); // The hover effect occurs when the mouse is on the letter
-            const intensity = Math.exp(-(distance ** 2) / 20000); // When the mouse is on the letter, the font weight increases
-            animateLetter(letter, min + (max - min) * intensity);
+        letters.forEach((letter, i)=>{
+            const { left: l, width: w } = letter.getBoundingClientRect();
+            const distance = Math.abs(mouseX - (l - left + w / 2));
+            const intensity = Math.exp(-(distance ** 2) / 2000);
+            setters[i](min + (max - min) * intensity);
         });
     };
-    const handleMouseLeave = ()=>letters.forEach((letter)=>animateLetter(letter, base, 0.3));
+    const handleMouseLeave = ()=>setters.forEach((set)=>set(base));
     container.addEventListener("mousemove", handleMouseMove);
     container.addEventListener("mouseleave", handleMouseLeave);
     return ()=>{
@@ -1418,8 +1423,8 @@ const Welcome = ()=>{
                 children: renderText("Hi, I am Hamza Welcome to my", "text-3xl font-georama", 200)
             }, void 0, false, {
                 fileName: "[project]/src/components/Welcome.tsx",
-                lineNumber: 90,
-                columnNumber: 13
+                lineNumber: 92,
+                columnNumber: 4
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                 ref: titleRef,
@@ -1427,14 +1432,14 @@ const Welcome = ()=>{
                 children: renderText("portfolio", "text-9xl italic font-georama")
             }, void 0, false, {
                 fileName: "[project]/src/components/Welcome.tsx",
-                lineNumber: 97,
-                columnNumber: 13
+                lineNumber: 99,
+                columnNumber: 4
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/Welcome.tsx",
-        lineNumber: 86,
-        columnNumber: 9
+        lineNumber: 88,
+        columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 };
 const __TURBOPACK__default__export__ = Welcome;
@@ -2864,7 +2869,7 @@ const sanityClient = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_mo
     projectId,
     dataset,
     apiVersion,
-    useCdn: true
+    useCdn: ("TURBOPACK compile-time value", "development") === 'production'
 });
 async function sanityFetch(query, params) {
     return sanityClient.fetch(query, params ?? {});
@@ -3094,7 +3099,7 @@ const Contact = ()=>{
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
                                 href: `mailto:${email}`,
-                                className: "mt-2 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#007AFF] text-white text-xs font-semibold shadow-sm hover:bg-blue-600 active:scale-95 transition-all",
+                                className: "mt-2 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#D33535] text-white text-xs font-semibold shadow-sm hover:bg-[#1F1F1F] active:scale-95 transition-all",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$mail$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Mail$3e$__["Mail"], {
                                         size: 14
