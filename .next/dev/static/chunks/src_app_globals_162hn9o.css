@@ -1031,10 +1031,6 @@
     max-width: var(--container-xs);
   }
 
-  .min-w-32\.5 {
-    min-width: calc(var(--spacing) * 32.5);
-  }
-
   .min-w-130 {
     min-width: calc(var(--spacing) * 130);
   }
@@ -2170,12 +2166,12 @@
       background-color: var(--color-blue-100);
     }
 
-    .hover\:bg-blue-600:hover {
-      background-color: var(--color-blue-600);
-    }
-
     .hover\:bg-gray-200:hover {
       background-color: var(--color-gray-200);
+    }
+
+    .hover\:text-blue-700:hover {
+      color: var(--color-blue-700);
     }
 
     .hover\:text-gray-700:hover {
@@ -2258,20 +2254,12 @@
       grid-template-columns: repeat(12, minmax(0, 1fr));
     }
 
-    .sm\:flex-row {
-      flex-direction: row;
-    }
-
     .sm\:items-center {
       align-items: center;
     }
 
     .sm\:p-4 {
       padding: calc(var(--spacing) * 4);
-    }
-
-    .sm\:pl-0 {
-      padding-left: 0;
     }
   }
 
