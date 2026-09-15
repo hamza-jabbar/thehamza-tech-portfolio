@@ -4,11 +4,19 @@ import { Search } from "lucide-react";
 import WindowWrapper from "#hoc/WindowWrapper";
 import WindowControls from "#components/WindowControls";
 import { photosLinks, gallery } from "#constants";
-import useWindowStore from "#store/window";
 import clsx from "clsx";
 import { useState, useMemo } from "react";
 import { useSanityData } from "#hooks/useSanityData";
-import { galleryThumb } from "#lib/imageUrl";
+import { galleryThumb, galleryFull } from "#lib/imageUrl";
+
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import Captions from "yet-another-react-lightbox/plugins/captions";
+import "yet-another-react-lightbox/plugins/captions.css";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 
 const GALLERY_GRID_SPAN: Record<number, string> = {
   0: "row-start-1 row-span-3 col-start-1 col-span-3",
@@ -18,8 +26,8 @@ const GALLERY_GRID_SPAN: Record<number, string> = {
 };
 
 const Photos = () => {
-  const { openWindow } = useWindowStore();
   const [activeTab, setActiveTab] = useState<string | number>("all");
+  const [lightboxIndex, setLightboxIndex] = useState(-1);
   const { data, loading } = useSanityData();
 
   // Build sidebar tabs from the unique categories present in the fetched photos
@@ -50,7 +58,8 @@ const Photos = () => {
       return data.photos.map((photo) => ({
         id: photo._id,
         img: galleryThumb(photo.image),
-        alt: photo.alt,
+        fullImg: photo.image ? galleryFull(photo.image) : galleryThumb(photo.image),
+        alt: photo.alt || "Gallery Photo",
         caption: photo.caption,
         categoryId: photo.category?._id ?? "all",
         imageRef: photo.image,
@@ -60,6 +69,7 @@ const Photos = () => {
     return gallery.map((g) => ({
       id: g.id,
       img: g.img,
+      fullImg: g.img,
       alt: `Gallery Image ${g.id}`,
       caption: undefined,
       categoryId: "all",
@@ -73,16 +83,15 @@ const Photos = () => {
     return galleryItems.filter((item) => item.categoryId === activeTab);
   }, [galleryItems, activeTab]);
 
-  const handleImageClick = (id: string | number, img: string, alt: string) => {
-    openWindow("imgfile", {
-      id,
-      name: alt ?? `Gallery Photo`,
-      icon: "/images/image.png",
-      kind: "file",
-      fileType: "img",
-      imageUrl: img,
-    });
-  };
+  // Slides formatted for Yet Another React Lightbox
+  const slides = useMemo(() => {
+    return filteredItems.map((item) => ({
+      src: item.fullImg || item.img,
+      alt: item.alt,
+      title: item.alt,
+      description: item.caption,
+    }));
+  }, [filteredItems]);
 
   return (
     <div className="flex flex-col h-full bg-white select-none overflow-hidden">
@@ -144,10 +153,10 @@ const Photos = () => {
 
           {/* Mobile 2-column Grid */}
           <div className="md:hidden grid grid-cols-2 gap-3">
-            {filteredItems.map(({ id, img, alt }) => (
+            {filteredItems.map(({ id, img, alt }, index) => (
               <div
                 key={id}
-                onClick={() => handleImageClick(id, img, alt)}
+                onClick={() => setLightboxIndex(index)}
                 className="group relative aspect-square rounded-2xl overflow-hidden shadow-sm border border-gray-100 cursor-pointer active:scale-95 transition-all"
               >
                 <img
@@ -168,7 +177,7 @@ const Photos = () => {
                   "cursor-pointer overflow-hidden rounded-lg",
                   GALLERY_GRID_SPAN[index] ?? ""
                 )}
-                onClick={() => handleImageClick(id, img, alt)}
+                onClick={() => setLightboxIndex(index)}
               >
                 <img
                   src={img}
@@ -180,6 +189,16 @@ const Photos = () => {
           </ul>
         </div>
       </div>
+
+      {/* Lightbox for expanded image view */}
+      <Lightbox
+        open={lightboxIndex >= 0}
+        close={() => setLightboxIndex(-1)}
+        index={lightboxIndex}
+        slides={slides}
+        plugins={[Zoom, Thumbnails, Captions, Fullscreen]}
+        controller={{ closeOnBackdropClick: true }}
+      />
     </div>
   );
 };

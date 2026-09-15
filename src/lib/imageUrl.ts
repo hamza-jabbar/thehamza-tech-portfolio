@@ -28,6 +28,11 @@ export function galleryThumb(source: SanityImageSource) {
   return urlFor(source).width(1200).height(1200).fit('crop').quality(80).format('webp').auto('format').url();
 }
 
+/** Gallery full image for lightbox: up to 2048px, WebP 90% */
+export function galleryFull(source: SanityImageSource) {
+  return urlFor(source).width(2048).quality(90).format('webp').auto('format').url();
+}
+
 /** Profile / About Me image: 400×400 square crop, WebP 85% */
 export function profileImage(source: SanityImageSource) {
   return urlFor(source).width(400).height(400).fit('crop').quality(85).format('webp').auto('format').url();
