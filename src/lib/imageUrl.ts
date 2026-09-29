@@ -47,3 +47,8 @@ export function projectImage(source: SanityImageSource) {
 export function iconImage(source: SanityImageSource) {
   return urlFor(source).width(64).height(64).fit('crop').quality(90).format('webp').auto('format').url();
 }
+
+/** Article cover image: 1200×630 crop, WebP 85% */
+export function articleImage(source: SanityImageSource) {
+  return urlFor(source).width(1200).height(630).fit('crop').quality(85).format('webp').auto('format').url();
+}

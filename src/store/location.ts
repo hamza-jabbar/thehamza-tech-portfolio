@@ -1,15 +1,15 @@
 // Which folder is open
 
 import { locations } from "#constants";
+import type { FinderItem } from "#lib/finderUtils";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-// Get from Sanity [TODO]
-const DEFAULT_LOCATION = locations.work;
+const DEFAULT_LOCATION = locations.work as unknown as FinderItem;
 
 export interface LocationStoreState {
-  activeLocation: any;
-  setActiveLocation: (location: any) => void;
+  activeLocation: FinderItem | null;
+  setActiveLocation: (location: FinderItem | null | undefined) => void;
   resetActiveLocation: () => void;
 }
 
@@ -18,7 +18,7 @@ const useLocationStore = create<LocationStoreState>()(
     activeLocation: DEFAULT_LOCATION,
 
     // Set location
-    setActiveLocation: (location: any) =>
+    setActiveLocation: (location: FinderItem | null | undefined) =>
       set((state) => {
         if (location === undefined) return;
         state.activeLocation = location;
