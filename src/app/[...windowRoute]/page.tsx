@@ -20,6 +20,10 @@ const TITLE_MAP: Record<string, string> = {
   resume: "Resume / CV | Hamza's Portfolio",
   photos: "Photos & Gallery | Hamza's Portfolio",
   archive: "Archive | Hamza's Portfolio",
+  services: "Services & Capabilities | Hamza's Portfolio",
+  thinking: "Articles & Insights | Hamza's Portfolio",
+  lab: "Lab & Experiments | Hamza's Portfolio",
+  now: "What I`m Doing Now | Hamza's Portfolio",
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -28,12 +32,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const secondaryRoute = resolvedParams.windowRoute?.[1];
 
   let title = TITLE_MAP[primaryRoute] || "Hamza's Portfolio";
-  if ((primaryRoute === "work" || primaryRoute === "finder") && secondaryRoute) {
-    const formattedProjectName = secondaryRoute
+  if (secondaryRoute) {
+    const formattedItemName = secondaryRoute
       .split("-")
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
       .join(" ");
-    title = `${formattedProjectName} — Work | Hamza's Portfolio`;
+
+    if (primaryRoute === "work" || primaryRoute === "finder") {
+      title = `${formattedItemName} — Work | Hamza's Portfolio`;
+    } else if (primaryRoute === "thinking" || primaryRoute === "blog" || primaryRoute === "projects") {
+      title = `${formattedItemName} — Article | Hamza's Portfolio`;
+    } else if (primaryRoute === "services") {
+      title = `${formattedItemName} — Service | Hamza's Portfolio`;
+    } else if (primaryRoute === "lab") {
+      title = `${formattedItemName} — Experiment | Hamza's Portfolio`;
+    }
   }
 
   return {

@@ -32,6 +32,10 @@ export const ROUTE_TO_WINDOW_MAP: Record<string, string> = {
   gallery: "photos",
   archive: "finder",
   trash: "finder",
+  services: "safari",
+  thinking: "safari",
+  lab: "safari",
+  now: "txtfile",
 };
 
 export const WINDOW_TO_ROUTE_MAP: Record<string, string> = {
@@ -138,7 +142,7 @@ export function useWindowRouteSync() {
 
   // ─── 3. Helper to open window with route push ──────────────────────────────
   const navigateToWindow = useCallback(
-    (windowKey: string, data?: any) => {
+    (windowKey: string, data?: { name?: string; [key: string]: unknown } | null) => {
       let targetUrl = WINDOW_TO_ROUTE_MAP[windowKey] || `/${windowKey}`;
       
       if (windowKey === "finder" && data?.name) {

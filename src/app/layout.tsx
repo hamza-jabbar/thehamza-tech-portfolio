@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { buildPersonJsonLd, buildWebsiteJsonLd } from "#lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,6 +23,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const personJsonLd = buildPersonJsonLd();
+  const websiteJsonLd = buildWebsiteJsonLd();
+
   return (
     <html lang="en">
       <head>
@@ -30,6 +34,14 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
           rel="stylesheet"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
       </head>
       <body className="antialiased overflow-hidden select-none">

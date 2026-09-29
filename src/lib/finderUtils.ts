@@ -1,4 +1,5 @@
 import type { SanityPortfolio, SanityProjectFile } from '#lib/queries';
+import type { SanityProject } from '#types/sanity';
 import { projectImage } from '#lib/imageUrl';
 
 export interface FinderItem {
@@ -66,6 +67,65 @@ export function sanityProjectToFinderItem(
     kind: 'folder',
     position:
       project.position ?? DEFAULT_PROJECT_POSITIONS[index % DEFAULT_PROJECT_POSITIONS.length],
+    children,
+  };
+}
+
+export function sanityDocumentProjectToFinderItem(
+  proj: SanityProject,
+  index: number
+): FinderItem {
+  const children: FinderItem[] = [];
+
+  // Description / Info text file
+  const descriptionLines: string[] = [];
+  if (proj.summary) descriptionLines.push(proj.summary);
+  if (proj.problem) descriptionLines.push(`Problem: ${proj.problem}`);
+  if (proj.outcome) descriptionLines.push(`Outcome: ${proj.outcome}`);
+
+  children.push({
+    id: `${proj._id}-readme`,
+    name: 'README.txt',
+    icon: FILE_ICON_MAP.txt,
+    kind: 'file',
+    fileType: 'txt',
+    position: FILE_POSITIONS[0],
+    description: descriptionLines.length > 0 ? descriptionLines : [proj.title],
+  });
+
+  // Hero image if present
+  if (proj.heroImage) {
+    children.push({
+      id: `${proj._id}-hero`,
+      name: 'cover.png',
+      icon: FILE_ICON_MAP.img,
+      kind: 'file',
+      fileType: 'img',
+      position: FILE_POSITIONS[1 % FILE_POSITIONS.length],
+      imageUrl: projectImage(proj.heroImage),
+    });
+  }
+
+  // External links
+  (proj.externalLinks ?? []).forEach((link, li) => {
+    children.push({
+      id: `${proj._id}-link-${li}`,
+      name: `${link.label || 'Link'}.url`,
+      icon: FILE_ICON_MAP.url,
+      kind: 'file',
+      fileType: 'url',
+      href: link.url,
+      position: FILE_POSITIONS[(li + 2) % FILE_POSITIONS.length],
+    });
+  });
+
+  return {
+    id: proj._id,
+    name: proj.title,
+    icon: '/images/folder.png',
+    kind: 'folder',
+    position:
+      DEFAULT_PROJECT_POSITIONS[index % DEFAULT_PROJECT_POSITIONS.length],
     children,
   };
 }

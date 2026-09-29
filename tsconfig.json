@@ -56,6 +56,9 @@
       "#hooks/*": [
         "./src/hooks/*"
       ],
+      "#types/*": [
+        "./src/types/*"
+      ],
       "@/*": [
         "./src/*"
       ]

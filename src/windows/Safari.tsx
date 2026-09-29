@@ -1,11 +1,38 @@
 "use client";
 
+import { useMemo } from "react";
 import { WindowControls } from "#components";
 import { blogPosts } from "#constants";
 import WindowWrapper from "#hoc/WindowWrapper";
 import { ChevronLeft, ChevronRight, Copy, MoveRight, PanelLeft, Plus, Search, Share, ShieldHalf } from "lucide-react";
+import { useSanityQuery } from "#hooks/useSanityQuery";
+import { ARTICLES_QUERY } from "#lib/sanity-queries";
+import type { SanityArticle } from "#types/sanity";
+import { articleImage } from "#lib/imageUrl";
+import dayjs from "dayjs";
 
 const Safari = () => {
+	const { data: sanityArticles, loading } = useSanityQuery<SanityArticle[]>(ARTICLES_QUERY);
+
+	const posts = useMemo(() => {
+		if (!loading && sanityArticles && sanityArticles.length > 0) {
+			return sanityArticles.map((article) => ({
+				id: article._id,
+				date: article.publishedAt ? dayjs(article.publishedAt).format("MMM D, YYYY") : "Recently",
+				title: article.title,
+				image: article.featuredImage ? articleImage(article.featuredImage) : "/images/blog1.png",
+				link: article.externalUrl || `/thinking/${article.slug?.current || ""}`,
+			}));
+		}
+		return blogPosts.map((p) => ({
+			id: String(p.id),
+			date: p.date,
+			title: p.title,
+			image: p.image,
+			link: p.link,
+		}));
+	}, [sanityArticles, loading]);
+
 	return (
 		<div className="flex flex-col h-full bg-white select-none overflow-hidden">
 			{/* Desktop macOS Safari Toolbar */}
@@ -54,7 +81,7 @@ const Safari = () => {
 
 				{/* Blog Content */}
 				<div className="space-y-6 md:space-y-8">
-					{blogPosts.map(({ id, image, title, date, link }) => (
+					{posts.map(({ id, image, title, date, link }) => (
 						<div
 							key={id}
 							className="bg-gray-50 md:bg-transparent p-4 md:p-0 rounded-2xl md:rounded-none border border-gray-100 md:border-none flex flex-col sm:grid sm:grid-cols-12 gap-4 items-start sm:items-center"
